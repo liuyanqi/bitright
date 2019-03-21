@@ -1,0 +1,73 @@
+.grid-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: auto;
+  grid-template-areas:
+    "header header"
+    "control pending"
+    "block chain";
+  grid-gap: 15px 10px;
+  }
+
+button {
+  margin: 10px;
+  padding: 10px;
+  font-size: 24px;
+  border-radius: 15px;
+  -webkit-transition-duration: 0.4s; /* Safari */
+  transition-duration: 0.4s;
+}
+
+button:hover {
+  background-color: #4CAF50; /* Green */
+  color: white;
+}
+
+input {
+  margin: 10px;
+  padding: 10px;
+}
+
+select {
+   margin: 10px;
+  padding: 10px;
+}
+
+
+
+
+.header {
+  grid-area: header;
+  background-color: lightgrey;
+  margin: 10px;
+  padding: 25px;
+  border-bottom: 4px solid black;
+}
+
+.control {
+  grid-area: control;
+  border-bottom: 4px solid black;
+  background-color: lightgrey;
+  padding: 10px;
+}
+
+.chain {
+  grid-area: chain;
+  border-bottom: 4px solid black;
+  background-color: lightgrey;
+  padding: 10px;
+}
+
+.block {
+  grid-area: block;
+  border-bottom: 4px solid black;
+  background-color: lightgrey;
+  padding: 10px;
+}
+
+.pending_tx {
+  grid-area: pending;
+  border-bottom: 4px solid black;
+  background-color: lightgrey;
+  padding: 10px;
+}

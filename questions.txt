@@ -1,0 +1,6 @@
+MockBlock README Questions
+
+
+1. This project required you to initialize a nonce in the Block constructor and a difficulty in the Blockchain constructor. Explain the definition, purpose and significance of both in performing proof of work calculations. In particular, as more miners join the network explain how the unit of difficulty is used to ensure a consistent interval of valid blocks.
+
+2. This MockBlock project uses the proof of work consensus algorithm to confirm transactions and add new blocks to a blockchain, the mechanism by which Bitcoin confirms transactions. Consider and discuss the benefits and downsides to using proof of work in blockchain networks. What are some alternatives to proof of work consensus? List at least three, and discuss the benefits/downsides of each.
