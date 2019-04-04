@@ -1,6 +1,7 @@
 from time import time
 import datetime
 import hashlib as hasher
+import acoustic.acoustid_check as ac
 
 """ Class for transactions made on the blockchain. Each transaction has a
     sender, recipient, and value.
@@ -12,13 +13,17 @@ class Transaction:
         self.author = author
         self.genre = genre
         self.media = media
+        f = open(media, "rb")
+        content = f.readlines()
+        self.hash_media = hasher.sha256(content).hexdigest()
     
     """ Converts the transaction to a dictionary """
     def toDict(self):
         return {
             'author': self.author,
             'genre': self.genre,
-            'media': self.media
+            'media': self.media,
+            "hash_media" : self.hash_media
     }
 
     def __str__(self):
@@ -40,7 +45,7 @@ class Block:
     
     def compute_hash(self):
         #TODO Implement hashing
-        concat_str = str(self.index) + str(self.timestamp) + self.previous_hash + self.time_string
+        concat_str = str(self.index) + str(self.timestamp) + self.previous_hash + self.transaction['author'] + self.transaction['genre'] + self.transaction['hash_media']
         hash_result = hasher.sha256(concat_str).hexdigest()
         return hash_result
     
@@ -79,7 +84,7 @@ class Blockchain:
     def new_transaction(self, author, genre, media):
         #TODO: implement adding new transactions
         new_trans = Transaction(author, genre, media).toDict();
-        self.unconfirmed_transactions. = new_trans.copy()
+        self.unconfirmed_transactions= new_trans.copy()
 
         return new_trans;
     
@@ -110,8 +115,8 @@ class Blockchain:
         #check originality
         for prev_block in self.chain[1:]:
             if block.transaction['genre'] == prev_block.transaction['genre']:
-                if block.transaction['media']== prev_block.transaction['media']:
-                    return 0   
+                if block.transaction['genre'] == 'music':
+                    score = ac.calc_accuracy(block.transaction['media'], prev_block.transacton['media'])  
 
         return 1;
     
