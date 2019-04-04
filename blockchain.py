@@ -9,8 +9,11 @@ import acoustic.acoustid_check as ac
 class Transaction:
     
     """ Transaction initializer """
-    def __init__(self, author, genre, media):
+    def __init__(self, title="", filename="", author="", public_key="", genre="", media=):
+        self.title = title
+        self.filename = filename
         self.author = author
+        self.public_key = public_key
         self.genre = genre
         self.media = media
         f = open(media, "rb")
@@ -20,7 +23,10 @@ class Transaction:
     """ Converts the transaction to a dictionary """
     def toDict(self):
         return {
+            'title': self.title,
+            'filename': self.filename,
             'author': self.author,
+            'public_key': self.public_key,
             'genre': self.genre,
             'media': self.media,
             "hash_media" : self.hash_media
@@ -73,9 +79,13 @@ class Blockchain:
     def create_genesis_block(self):
         #TODO: implement creating a new genesis block
         empty_media = {
-        "media" : "",
-        "genre": "",
-        "author": ""
+            'title': "",
+            'filename': "",
+            'author': "",
+            'public_key': "",
+            'genre': "",
+            'media': "",
+            "hash_media" : ""
         }
         new_block = Block(index=0, media=empty_media, previous_hash=0)
         self.add_block(new_block)
