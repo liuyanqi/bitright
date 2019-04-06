@@ -1,7 +1,12 @@
+import os
+import hashlib
 from flask import Flask, request, render_template, jsonify, redirect
 from blockchain import Blockchain
 
+UPLOAD_FOLDER = 'uploads'
+
 app =  Flask(__name__)
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 # the node's copy of blockchain
 blockchain = Blockchain()
@@ -9,6 +14,10 @@ blockchain = Blockchain()
 @app.route('/')
 def index():
     return render_template('./index.html')
+
+@app.route('/blockchain')
+def blockchain_page():
+    return render_template('./blockchain.html')
 
 
 @app.route('/new_transaction', methods=['POST'])
@@ -67,5 +76,42 @@ def integrityn():
 	response = {'integrity': integrity}
 
 	return jsonify(response), 200
+
+@app.route('/upload', methods=['POST'])
+def upload():
+	global blockchain
+
+	print(request)
+	if 'contentFile' not in request.files:
+		response = {'ok': False}
+		return jsonify(response), 500
+	file = request.files['contentFile']
+	
+	filename = hashlib.sha256(file.read()).hexdigest()
+
+	action = request.form['action']
+
+	if action == "lookup":
+		#TODO search for exact and partial matches
+		print('TODO lookup')
+	elif action == "publish":
+		file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+		
+		#Create a new transaction
+		author = request.form['author']
+		title = request.form['title']
+		pubkey = request.form['pubkey']
+		genre = request.form['genre']
+		original_filename = file.filename
+		blockchain.new_transaction(author, genre, filename, title, pubkey, original_filename)
+		result = blockchain.mine()
+		if result == None:
+			response = {'ok': False}
+		else:
+			response = {'ok': True, 'block': result}
+
+		return jsonify(response), 200
+
+
 
 app.run(debug=True, port=8000)

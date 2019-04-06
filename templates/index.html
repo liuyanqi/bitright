@@ -1,272 +1,98 @@
-<!DOCTYPE html>
-<html lang="en">
+<html>
 
 <head>
-
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <meta name="description" content="">
-  <meta name="author" content="">
-
-  <title>Blockchain Frontend</title>
-
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-  <script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
-  <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
-
-
-  <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css">
-  <link rel="stylesheet" type="text/css" href="/static/index.css">
-
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.bundle.min.js"
+        integrity="sha384-xrRywqdh3PHs8keKZN+8zzc5TX0GRTLCcmivcbNJWm2rs5C8PRhcEn3czEjhAO9o"
+        crossorigin="anonymous"></script>
+    <script
+        src="https://cdn.jsdelivr.net/npm/gasparesganga-jquery-loading-overlay@2.1.3/dist/loadingoverlay.min.js"></script>
+    <script src="../static/index.js"></script>
 </head>
 
 <body>
-
-  <center>
-
-  <div class="grid-container">
-
-    <div class="header">
-      <button id="mine_button">Mine</button>
-      <button id="integrity_button">Check Integrity</button>
-      <button id="reset_button">Reset Blockchain</button>
+    <div class="container-fluid" id="nav">
+        <div class="row">
+            <div class="col text-right">
+                <a href="/blockchain">View Blockchain</a> <a href="#" class="ml-3">About Us</a> <a href="#" class="ml-3">FAQ</a>
+            </div>
+        </div>
     </div>
-
-    <div class="control">
-
-     <br>
-
-    
-      <h2> Add a New Transaction </h2>
-      <form action="/new_transaction" id="textform" method="post">
-        <input type="text" name="sender" placeholder="Sender"></input> <br>
-        <input type="text" name="recipient" placeholder="Recipient"></input> <br>
-        <input type="number" name="value" placeholder="Value"></input> <br>
-        <button type="submit">Add Transaction</button><br><br>
-      </form>
+    <div class="container h-75 justify-content-center align-items-center d-flex flex-column">
+        <div class="row">
+            <div class="col">
+                <center>
+                    <div class="w-50">
+                        <img src="../static/logo.png" class="img-fluid" alt="Responsive image">
+                    </div>
+                </center>
+            </div>
+        </div>
+        <div class="row mt-4">
+            <div class="col">
+                <center>
+                    <form id="content">
+                        <label for="filePicker" class="btn btn-outline-primary" style="cursor: pointer;">
+                            Browse File
+                            <input id="filePicker" type="file" name="contentFile" class="d-none">
+                        </label>
+                        <br/>
+                        <span id="fname"></span>
+                        <div class="row mt-1" id="genreSelector">
+                            <div class="col-12">
+                                <select class="form-control" name="genre">
+                                    <option>Audio</option>
+                                    <option>Image</option>
+                                    <option>Text</option>
+                                </select>
+                            </div>
+                        </div>
+                    </form>
+                </center>
+            </div>
+        </div>
+        <div class="row mt-4 w-100" id="publishinfo">
+            <div class="col-9" style="margin: 0 auto;">
+                <form>
+                    <div class="row">
+                        <div class="col-6">
+                            <div class="form-group">
+                                <label for="contentTitle">Content Title</label>
+                                <input required type="text" class="form-control" id="contentTitle" placeholder="">
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="form-group">
+                                <label for="contentAuthor">Content Author</label>
+                                <input required type="text" class="form-control" id="contentAuthor" placeholder="">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mt-3">
+                        <div class="col-12">
+                            <div class="form-group">
+                                <label for="contentOwnerPubKey">Content Owner PGP Public Key</label>
+                                <textarea required class="form-control" id="contentOwnerPubKey" rows="7"
+                                    placeholder="-----BEGIN PGP PUBLIC KEY BLOCK-----&#10;Version: BCPG C# v1.6.1.0&#10;EXAMPLEEXAMPLEEXAMPLEEXAMPLEEXAMPLEEXAMPLEEXAMPLEEXAMPLEEXAMPLEEXAMPLEEXAMPLEEXAMPLEEXAMPLEEXAMPLEEXAMPLEEXAMPLEEXAMPLEEXAMPLEEXAMPLEEXAMPLEEXAMPLEEXAMPLEEXAMPLEEXAMPLEEXAMPLEEXAMPLEEXAMPLEEXAMPLEEXAMPLEEXAMPLEEXAMPLE==&#10;-----END PGP PUBLIC KEY BLOCK-----
+                                                        "></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div class="row" id="step2">
+            <div class="col">
+                <center>
+                    <button type="button" id="btnPub" class="btn btn-primary" onclick="showPublishInfo()">Publish</button>
+                    <button type="button" id="btnConfirmPub" class="btn btn-primary" onclick="confirmPublish()">Confirm Publish</button>
+                    <button type="button" class="btn btn-primary" onclick="lookup()">Lookup</button>
+                </center>
+            </div>
+        </div>
     </div>
-
-    <!-- Unmined Transactions Table -->
-    <div class="pending_tx">
-      <h2> Unconfirmed Transactions </h2>
-      <table id="unmined_transactions_table" cellspacing="0">
-        <tr>
-          <th>Sender</th>
-          <th>Recipient</th>
-          <th>Value</th>
-        </tr>
-      </table>
-     </div>
-
-      <br><br>
-
-    <div class="chain">
-      <h2> The Blockchain </h2>
-
-      <table id="chain_table" class=" hover" cellspacing="0">
-      </table>
-      </div>
-   
-
-    <div class="block">
-      <h2> View Block Transactions </h2>
-      <form id="block_form">
-        <select id="block_select" name="block_index">
-        </select>
-      </form>
-
-    <table id="block_table" cellspacing="0">
-      <tr>
-        <th>Sender</th>
-        <th>Reciever</th>
-        <th>Value</th>
-      </tr>
-    </table>
-
-  </div>
-
-  </div>
-
-  </center>
-
 </body>
-
-<script type="text/javascript">
-
-  $( document ).ready(function() {
-
-    let chain_table = 
-
-
-
-    $.ajax({
-      url: "/pending_tx",
-      type: 'GET',
-      success: function(response){
-        transactions = response["transactions"]
-        let dataSet = []
-        for (let i = 0; i < transactions.length; i++) {
-          let val = transactions[i]["value"]
-          let sender = transactions[i]["sender"]
-          let recipient = transactions[i]["recipient"]
-
-          let data = [sender, recipient, val];
-
-          dataSet.push(data);
-
-        }
-
-        $('#unmined_transactions_table').DataTable({
-          data: dataSet,
-          columns: [
-          { title: "Sender" },
-          { title: "Recipient" },
-          { title: "Value" }
-          ]
-        });
-      },
-      error: function(error){
-        console.log(error);
-      }
-    });
-
-    $.ajax({
-      url: "/chain",
-      type: 'GET',
-      success: function(response){
-        let chain = response["chain"];
-        console.log(response)
-
-        let dataSet = []
-
-        for (let i = 0; i < chain.length; i++) {
-
-          let transactions = chain[i]["data"]
-          let index = chain[i]["index"]
-          let prev_hash = chain[i]["previous_hash"]
-          let nonce = chain[i]["nonce"]
-          let time = chain[i]["time_string"]
-
-          let data = [index, transactions.length, prev_hash, nonce, time];
-
-          console.log(data);
-
-          dataSet.push(data);
-
-          $('#block_select').append($('<option>', {value:index, text:'Block ' + index}));
-        }
-
-        let chain_table = $('#chain_table').DataTable({
-          data: dataSet,
-          columns: [
-          { title: "Index" },
-          { title: "Number of Transactions" },
-          { title: "Previous Hash" },
-          { title: "Nonce" },
-          { title: "Timestamp" }
-          ]
-        });
-
-        $('#chain_table tbody').on('click', 'tr', function () {
-          let data = chain_table.row(this).data();
-          $("#block_select").val(data[0]).trigger('change');
-        } );
-      },
-      error: function(error){
-        console.log(error);
-      }
-    });
-
-
-    $("#block_select").change(function () {
-
-      console.log("changed")
-
-      $.ajax({
-        url: "/get_block",
-        type: "POST",
-        dataType : 'json',
-        data: $('#block_form').serialize(),
-        success: function(response){
-          block = response["block"]
-          transactions = block["data"]
-          let dataSet = []
-          for (let i = 0; i < transactions.length; i++) {
-            let val = transactions[i]["value"]
-            let sender = transactions[i]["sender"]
-            let recipient = transactions[i]["recipient"]
-
-            let data = [sender, recipient, val];
-
-            dataSet.push(data);
-          }
-          $('#block_table').DataTable({
-            data: dataSet,
-            columns: [
-            { title: "Sender" },
-            { title: "Recipient" },
-            { title: "Value" }
-            ],
-            destroy: true,
-          });
-
-        },
-        error: function(error){
-          console.log(error);
-        }
-      });
-    });
-
-    $("#mine_button").click(function () {
-
-      $.ajax({
-        url: "/mine",
-        type: "GET",
-        success: function(response){
-          window.location.reload();
-        },
-        error: function(error){
-          console.log(error);
-        }
-      });
-
-    });
-
-    $("#reset_button").click(function () {
-
-      $.ajax({
-        url: "/reset",
-        success: function(response){
-           window.location.reload();
-        },
-        error: function(error){
-          console.log(error);
-        }
-      });
-
-    });
-
-    $("#integrity_button").click(function () {
-
-      $.ajax({
-        url: "/integrity",
-        type: "GET",
-        success: function(response){
-          if (response["integrity"] === true) {
-            swal("Success!", "Blockchain passed the integrity test", "success");
-          } else {
-            swal("Uh oh!", "Blockchain failed the integrity test", "error");
-          }
-        },
-        error: function(error){
-          console.log(error);
-        }
-      });
-
-    });
-
-  });
-
-</script>
 
 </html>
