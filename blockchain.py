@@ -6,7 +6,7 @@ import acoustic.acoustid_check as ac
 """ Class for transactions made on the blockchain. Each transaction has a
     sender, recipient, and value.
     """
-class Transaction:
+class Transaction: 
     
     """ Transaction initializer """
     def __init__(self, title="", filename="", author="", public_key="", genre="", media=):
