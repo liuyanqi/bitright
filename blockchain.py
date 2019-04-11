@@ -1,7 +1,7 @@
 from time import time
 import datetime
 import hashlib as hasher
-import acoustic.acoustid_check as ac
+#import acoustic.acoustid_check as ac
 
 """ Class for transactions made on the blockchain. Each transaction has a
     sender, recipient, and value.
@@ -9,16 +9,16 @@ import acoustic.acoustid_check as ac
 class Transaction: 
     
     """ Transaction initializer """
-    def __init__(self, title="", filename="", author="", public_key="", genre="", media=):
+    def __init__(self, title="", filename="", author="", public_key="", genre="", media = ""):
         self.title = title
         self.filename = filename
         self.author = author
         self.public_key = public_key
         self.genre = genre
         self.media = media
-        f = open(media, "rb")
-        content = f.readlines()
-        self.hash_media = hasher.sha256(content).hexdigest()
+        #f = open(media, "rb")
+        #content = f.readlines()
+        #self.hash_media = hasher.sha256(content).hexdigest()
     
     """ Converts the transaction to a dictionary """
     def toDict(self):
@@ -29,7 +29,7 @@ class Transaction:
             'public_key': self.public_key,
             'genre': self.genre,
             'media': self.media,
-            "hash_media" : self.hash_media
+            #"hash_media" : self.hash_media
     }
 
     def __str__(self):
@@ -47,23 +47,24 @@ class Block:
         self.timestamp = time()
         self.previous_hash = previous_hash
         self.transaction = transaction
-        self.time_string = timestamp_to_string();
+        #self.time_string = self.timestamp_to_string()
+        self.time_string = "dasdas"
     
     def compute_hash(self):
         #TODO Implement hashing
-        concat_str = str(self.index) + str(self.timestamp) + self.previous_hash + self.transaction['author'] + self.transaction['genre'] + self.transaction['hash_media']
-        hash_result = hasher.sha256(concat_str).hexdigest()
+        concat_str = str(self.index) + str(self.timestamp) + str(self.previous_hash) + str(self.transaction['author']) + str(self.transaction['genre'])
+        hash_result = hasher.sha256(concat_str.encode('utf-8')).hexdigest()
         return hash_result
     
     """ Function to convert a timestamp to a string"""
-    def timestamp_to_string():
+    def timestamp_to_string(self):
         return datetime.datetime.fromtimestamp(self.timestamp).strftime('%H:%M')
     
     def __str__(self):
         toString =  str(self.index) + "\t" + str(self.timestamp) +"\t\t" + str(self.previous_hash) + "\n"
-        for tx in self.data:
-            toString +=  "\t" + str(tx) + "\n"
-        return toString;
+        #for tx in self.data:
+        #    toString +=  "\t" + str(tx) + "\n"
+        return toString
 
 """ Blockchain class. The blockchain is the network of blocks containing all the
     transaction data of the system.
@@ -85,15 +86,15 @@ class Blockchain:
             'public_key': "",
             'genre': "",
             'media': "",
-            "hash_media" : ""
+            #"hash_media" : ""
         }
         new_block = Block(index=0, media=empty_media, previous_hash=0)
         self.add_block(new_block)
         return new_block;
     
-    def new_transaction(self, author, genre, media):
+    def new_transaction(self, title, filename, author, public_key, genre, media):
         #TODO: implement adding new transactions
-        new_trans = Transaction(author, genre, media).toDict();
+        new_trans = Transaction(title, filename, author, public_key, genre, media).toDict();
         self.unconfirmed_transactions= new_trans.copy()
 
         return new_trans;
@@ -105,17 +106,19 @@ class Blockchain:
             previous_hash = 0
         else:
             block_idx = self.chain[-1].index + 1
-            previous_hash = self.chain[-1].compute_hash
-        block = Block(block_idx, unconfirmed_transactions, previous_hash);
+            previous_hash = self.chain[-1].compute_hash()
+        block = Block(block_idx, self.unconfirmed_transactions, previous_hash)
         if(self.verify_block(block)):
             self.add_block(block)
-        return block
+            return block
+        else:
+            return None
     
     def verify_block(self, block):
         #TODO: verify song originality and previous hash
         #check previous hash
         if len(self.chain) ==0:
-            previous_hash = 0;
+            previous_hash = 0
         else:
             previous_hash = self.chain[-1].compute_hash()
         if block.previous_hash == previous_hash:
@@ -123,12 +126,14 @@ class Blockchain:
         else:
             return 0
         #check originality
-        for prev_block in self.chain[1:]:
-            if block.transaction['genre'] == prev_block.transaction['genre']:
-                if block.transaction['genre'] == 'music':
-                    score = ac.calc_accuracy(block.transaction['media'], prev_block.transacton['media'])  
+        #for prev_block in self.chain[1:]:
+        #    if block.transaction['genre'] == prev_block.transaction['genre']:
+        #        if block.transaction['genre'] == 'music':
+                    #score = ac.calc_accuracy(block.transaction['media'], prev_block.transacton['media']) 
+                    #if score > 0.9:
+                    #   return 0 
 
-        return 1;
+        return 1
     
     def add_block(self, block):
         #TODO: add the block to chain

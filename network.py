@@ -103,12 +103,15 @@ def upload():
 		pubkey = request.form['pubkey']
 		genre = request.form['genre']
 		original_filename = file.filename
-		blockchain.new_transaction(author, genre, filename, title, pubkey, original_filename)
+		blockchain.new_transaction(title, original_filename, author, pubkey, genre, filename)
 		result = blockchain.mine()
 		if result == None:
+			print("FALSE")
 			response = {'ok': False}
 		else:
-			response = {'ok': True, 'block': result}
+			print("TEST")
+			print(result)
+			response = {'ok': True, 'block': result.__dict__}
 
 		return jsonify(response), 200
 
