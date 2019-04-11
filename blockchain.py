@@ -52,8 +52,8 @@ class Block:
     
     def compute_hash(self):
         #TODO Implement hashing
-        concat_str = str(self.index) + str(self.timestamp) + self.previous_hash + self.transaction['author'] + self.transaction['genre']
-        hash_result = hasher.sha256(concat_str).hexdigest()
+        concat_str = str(self.index) + str(self.timestamp) + str(self.previous_hash) + str(self.transaction['author']) + str(self.transaction['genre'])
+        hash_result = hasher.sha256(concat_str.encode('utf-8')).hexdigest()
         return hash_result
     
     """ Function to convert a timestamp to a string"""
@@ -106,7 +106,7 @@ class Blockchain:
             previous_hash = 0
         else:
             block_idx = self.chain[-1].index + 1
-            previous_hash = self.chain[-1].compute_hash
+            previous_hash = self.chain[-1].compute_hash()
         block = Block(block_idx, self.unconfirmed_transactions, previous_hash)
         if(self.verify_block(block)):
             self.add_block(block)
