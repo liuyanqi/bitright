@@ -1,7 +1,7 @@
 from time import time
 import datetime
 import hashlib as hasher
-#import acoustic.acoustid_check as ac
+import acoustic.acoustid_check as ac
 
 """ Class for transactions made on the blockchain. Each transaction has a
     sender, recipient, and value.
@@ -117,21 +117,24 @@ class Blockchain:
     def verify_block(self, block):
         #TODO: verify song originality and previous hash
         #check previous hash
+
         if len(self.chain) ==0:
             previous_hash = 0
         else:
             previous_hash = self.chain[-1].compute_hash()
-        if block.previous_hash == previous_hash:
-            return 1
-        else:
+        if block.previous_hash != previous_hash:
             return 0
+        print("helllloooooo2")
         #check originality
-        #for prev_block in self.chain[1:]:
-        #    if block.transaction['genre'] == prev_block.transaction['genre']:
-        #        if block.transaction['genre'] == 'music':
-                    #score = ac.calc_accuracy(block.transaction['media'], prev_block.transacton['media']) 
-                    #if score > 0.9:
-                    #   return 0 
+        for prev_block in self.chain:
+           if block.transaction['genre'] == prev_block.transaction['genre']:
+               if block.transaction['genre'] == 'Audio':
+                    print("helooooooo")
+                    # TODO: NEED TO ADD A FILEPATH
+                    score = ac.calc_accuracy('./acoustic/'+block.transaction['filename'], './acoustic/'+prev_block.transaction['filename']) 
+                    print(score)
+                    if score > 0.9:
+                      return 0 
 
         return 1
     
