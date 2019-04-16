@@ -3,7 +3,7 @@ import numpy as np
 import chromaprint
 
 path = './heaven.mp3'
-path2 = './heaven_second_half.mp3'
+path2 = './heaven_small.mp3'
 path3 = './undertheice.mp3'
 
 dur, fig = acoustid.fingerprint_file(path)
