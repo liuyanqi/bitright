@@ -1,37 +1,41 @@
+const AudioFileExt = ['pcm', 'wav', 'aiff', 'mp3', 'aac', 'ogg', 'wma', 'flac', 'alac'];
+const ImageFileExt = ['jpeg', 'jpg', 'png', 'gif', 'webp', 'bmp'];
+const TextFileExt = ['txt'];
+
 $(document).ready(function () {
 
     init();
 
-    $.ajax({
-        url: "/pending_tx",
-        type: 'GET',
-        success: function (response) {
-            transactions = response["transactions"]
-            let dataSet = []
-            for (let i = 0; i < transactions.length; i++) {
-                let val = transactions[i]["value"]
-                let sender = transactions[i]["sender"]
-                let recipient = transactions[i]["recipient"]
+    // $.ajax({
+    //     url: "/pending_tx",
+    //     type: 'GET',
+    //     success: function (response) {
+    //         transactions = response["transactions"]
+    //         let dataSet = []
+    //         for (let i = 0; i < transactions.length; i++) {
+    //             let val = transactions[i]["value"]
+    //             let sender = transactions[i]["sender"]
+    //             let recipient = transactions[i]["recipient"]
 
-                let data = [sender, recipient, val];
+    //             let data = [sender, recipient, val];
 
-                dataSet.push(data);
+    //             dataSet.push(data);
 
-            }
+    //         }
 
-            $('#unmined_transactions_table').DataTable({
-                data: dataSet,
-                columns: [
-                    { title: "Sender" },
-                    { title: "Recipient" },
-                    { title: "Value" }
-                ]
-            });
-        },
-        error: function (error) {
-            console.log(error);
-        }
-    });
+    //         $('#unmined_transactions_table').DataTable({
+    //             data: dataSet,
+    //             columns: [
+    //                 { title: "Sender" },
+    //                 { title: "Recipient" },
+    //                 { title: "Value" }
+    //             ]
+    //         });
+    //     },
+    //     error: function (error) {
+    //         console.log(error);
+    //     }
+    // });
 
     $.ajax({
         url: "/chain",
@@ -81,92 +85,92 @@ $(document).ready(function () {
     });
 
 
-    $("#block_select").change(function () {
+    // $("#block_select").change(function () {
 
-        console.log("changed")
+    //     console.log("changed")
 
-        $.ajax({
-            url: "/get_block",
-            type: "POST",
-            dataType: 'json',
-            data: $('#block_form').serialize(),
-            success: function (response) {
-                block = response["block"]
-                transactions = block["data"]
-                let dataSet = []
-                for (let i = 0; i < transactions.length; i++) {
-                    let val = transactions[i]["value"]
-                    let sender = transactions[i]["sender"]
-                    let recipient = transactions[i]["recipient"]
+    //     $.ajax({
+    //         url: "/get_block",
+    //         type: "POST",
+    //         dataType: 'json',
+    //         data: $('#block_form').serialize(),
+    //         success: function (response) {
+    //             block = response["block"]
+    //             transactions = block["data"]
+    //             let dataSet = []
+    //             for (let i = 0; i < transactions.length; i++) {
+    //                 let val = transactions[i]["value"]
+    //                 let sender = transactions[i]["sender"]
+    //                 let recipient = transactions[i]["recipient"]
 
-                    let data = [sender, recipient, val];
+    //                 let data = [sender, recipient, val];
 
-                    dataSet.push(data);
-                }
-                $('#block_table').DataTable({
-                    data: dataSet,
-                    columns: [
-                        { title: "Sender" },
-                        { title: "Recipient" },
-                        { title: "Value" }
-                    ],
-                    destroy: true,
-                });
+    //                 dataSet.push(data);
+    //             }
+    //             $('#block_table').DataTable({
+    //                 data: dataSet,
+    //                 columns: [
+    //                     { title: "Sender" },
+    //                     { title: "Recipient" },
+    //                     { title: "Value" }
+    //                 ],
+    //                 destroy: true,
+    //             });
 
-            },
-            error: function (error) {
-                console.log(error);
-            }
-        });
-    });
+    //         },
+    //         error: function (error) {
+    //             console.log(error);
+    //         }
+    //     });
+    // });
 
-    $("#mine_button").click(function () {
+    // $("#mine_button").click(function () {
 
-        $.ajax({
-            url: "/mine",
-            type: "GET",
-            success: function (response) {
-                window.location.reload();
-            },
-            error: function (error) {
-                console.log(error);
-            }
-        });
+    //     $.ajax({
+    //         url: "/mine",
+    //         type: "GET",
+    //         success: function (response) {
+    //             window.location.reload();
+    //         },
+    //         error: function (error) {
+    //             console.log(error);
+    //         }
+    //     });
 
-    });
+    // });
 
-    $("#reset_button").click(function () {
+    // $("#reset_button").click(function () {
 
-        $.ajax({
-            url: "/reset",
-            success: function (response) {
-                window.location.reload();
-            },
-            error: function (error) {
-                console.log(error);
-            }
-        });
+    //     $.ajax({
+    //         url: "/reset",
+    //         success: function (response) {
+    //             window.location.reload();
+    //         },
+    //         error: function (error) {
+    //             console.log(error);
+    //         }
+    //     });
 
-    });
+    // });
 
-    $("#integrity_button").click(function () {
+    // $("#integrity_button").click(function () {
 
-        $.ajax({
-            url: "/integrity",
-            type: "GET",
-            success: function (response) {
-                if (response["integrity"] === true) {
-                    swal("Success!", "Blockchain passed the integrity test", "success");
-                } else {
-                    swal("Uh oh!", "Blockchain failed the integrity test", "error");
-                }
-            },
-            error: function (error) {
-                console.log(error);
-            }
-        });
+    //     $.ajax({
+    //         url: "/integrity",
+    //         type: "GET",
+    //         success: function (response) {
+    //             if (response["integrity"] === true) {
+    //                 swal("Success!", "Blockchain passed the integrity test", "success");
+    //             } else {
+    //                 swal("Uh oh!", "Blockchain failed the integrity test", "error");
+    //             }
+    //         },
+    //         error: function (error) {
+    //             console.log(error);
+    //         }
+    //     });
 
-    });
+    // });
 
 });
 
@@ -186,6 +190,23 @@ function init() {
         if (filename.indexOf('\\') === 0 || filename.indexOf('/') === 0) {
             filename = filename.substring(1);
         }
+        let ext = filename.split('.')
+        if (ext.length > 1) {
+            ext = ext[ext.length-1].toLowerCase();
+            console.log(ext);
+            if (AudioFileExt.includes(ext)){
+                $("#genreSelectInput").val("Audio");
+            } else if(ImageFileExt.includes(ext)){
+                $("#genreSelectInput").val("Image");
+            }else if(TextFileExt.includes(ext)){
+                $("#genreSelectInput").val("Text");
+            } else {
+                $("#genreSelectInput").val("Text");
+            }
+        } else {
+            $("#genreSelectInput").val("Text");
+        }
+
         $('#fname').html('<mark>' + filename + '</mark>');
         $('#genreSelector').show();
         $('#step2').show();
