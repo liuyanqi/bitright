@@ -221,7 +221,10 @@ function uploadFile(action) {
         if (xhr.readyState === 4 && xhr.status === 200) {
             //Upload completed
             alert(xhr.responseText);
-            $.LoadingOverlay("hide");            
+            $.LoadingOverlay("hide");
+            $('#publishinfo').hide();
+            $('#btnPub').show();
+            $('#btnConfirmPub').hide();            
         } else if(xhr.readyState === 4 && xhr.status != 200){
             alert("Upload Failed");
             $.LoadingOverlay("hide");
