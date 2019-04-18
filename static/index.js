@@ -241,11 +241,62 @@ function uploadFile(action) {
     xhr.onreadystatechange = function () {
         if (xhr.readyState === 4 && xhr.status === 200) {
             //Upload completed
-            alert(xhr.responseText);
+            console.log(xhr.responseText);
+            var data = JSON.parse(xhr.responseText);
+            if(data.unique){
+                if (action == 'publish'){
+                    alert("Object Successfully Published");
+                    $('#publishinfo').hide();
+                    $('#btnPub').show();
+                    $('#btnConfirmPub').hide();    
+                }
+                else {
+                    alert("Object is Unique");                    
+                }
+            } else {
+                alert(data.message);
+                if(action == "lookup"){
+                    let currentBlock = data.block;
+                    var pubkeyBlob = new Blob([currentBlock.transaction.public_key], { type: 'text/plain' });
+
+                    $('#detailsModalLabel').html("<h4>Similar to: " + currentBlock.transaction.title + "</h4>");
+                    $('#detailsModalBodyLeft').html(
+                        "<b>" + "Index: " + "</b>" + currentBlock.index + "<br/>" +
+                        "<b>" + "Author: " + "</b>" + currentBlock.transaction.author + "<br/>" +
+                        "<b>" + "Genre: " + "</b>" + currentBlock.transaction.genre + "<br/>" +
+                        "<span style='word-wrap: break-word;'><b>Previous Hash: " + "</b>"+ currentBlock.previous_hash + "</span><br/>" +
+                        "<b>" + "Timestamp: " + "</b>" + currentBlock.timestamp + "<br/>" +
+                        "<b>" + "Owner Public Key: " + "</b>" + '<a href="' + window.URL.createObjectURL(pubkeyBlob) + '" download="pubkey-'+ currentBlock.transaction.media +'.asc" title="Owner Public Key"><i class="fas fa-key"></i></a>' + "<br/>" +
+                        "<b>" + "Original Filename: " + "</b>" + currentBlock.transaction.filename + "<br/>" +
+                        "<b>" + "Original File: " + "</b>" + '<a href="' + window.URL.createObjectURL(pubkeyBlob) + '" download="'+ currentBlock.transaction.filename +'" title="Original File"><i class="fas fa-file-download"></i></a>' + "<br/>"
+                    );
+
+                    let preview = "";
+                    if (currentBlock.transaction.genre == "Audio"){
+                        preview = 
+                            '<audio controls>' +
+                                '<source src="../uploads/' + currentBlock.transaction.media + '" type="audio/ogg">'+
+                                '<source src="./uploads/' + currentBlock.transaction.media + '" type="audio/mpeg">'+
+                                'Your browser does not support the audio element.'+
+                            '</audio>'
+                    } else if (currentBlock.transaction.genre == "Image"){
+                        preview = 
+                            '<img height="250px" width="250px" src="./uploads/'+ currentBlock.transaction.media +'" />';
+
+                    } else if (currentBlock.transaction.genre == "Text"){
+                        preview = 
+                        '<iframe height="250px" width="250px" src="./uploads/'+ currentBlock.transaction.media +'.html" />';
+                    }
+
+                    $('#detailsModalBodyRight').html(
+                        "<h5>File Preview</h5>" +
+                        preview
+                    );
+                    $('#detailsModal').modal({show: true});
+                }
+            }
             $.LoadingOverlay("hide");
-            //$('#publishinfo').hide();
-            //$('#btnPub').show();
-            //$('#btnConfirmPub').hide();            
+                    
         } else if(xhr.readyState === 4 && xhr.status != 200){
             alert("Upload Failed");
             $.LoadingOverlay("hide");

@@ -90,16 +90,15 @@ class Blockchain:
             'media': "",
             #"hash_media" : ""
         }
-        new_block = Block(index=0, media=empty_media, previous_hash=0)
+        new_block = Block(index=0, transaction=empty_media, previous_hash=0)
         self.add_block(new_block)
-        return new_block;
+        return new_block
     
     def new_transaction(self, title, filename, author, public_key, genre, media):
         #TODO: implement adding new transactions
         new_trans = Transaction(title, filename, author, public_key, genre, media).toDict();
         self.unconfirmed_transactions= new_trans.copy()
-
-        return new_trans;
+        return new_trans
     
     def mine(self):
         #TODO: create a block, verify its originality and add to the blockchain
@@ -140,24 +139,47 @@ class Blockchain:
                         score = tc.check_text_similarity('./uploads/' + block.transaction['media'], './uploads/'+prev_block.transaction['media'])
                         print(score)
                         if score < 100:
-                            return 0;
+                            return 0
                     if block.transaction['genre'] == "Image":
                         score = ic.calc_accuracy('./uploads/' + block.transaction['media'], './uploads/' + prev_block.transaction['media'])
                         print(score)
                         if score < 0.4:
-                            return 0;
+                            return 0
                 except:
                     return 0
         return 1
+
+    def lookup(self, transaction):
+        #check originality
+        for prev_block in self.chain:
+           if transaction['genre'] == prev_block.transaction['genre']:
+                try:
+                    if transaction['genre'] == 'Audio':
+                        score = ac.calc_accuracy('./tmp/' + transaction['media'], './uploads/' + prev_block.transaction['media'])
+                        print(score)
+                        if score > 0.9:
+                          return prev_block
+                    if transaction['genre'] == 'Text':
+                        score = tc.check_text_similarity('./tmp/' + transaction['media'], './uploads/'+prev_block.transaction['media'])
+                        print(score)
+                        if score < 100:
+                            return prev_block
+                    if transaction['genre'] == "Image":
+                        score = ic.calc_accuracy('./tmp/' + transaction['media'], './uploads/' + prev_block.transaction['media'])
+                        print(score)
+                        if score < 0.4:
+                            return prev_block
+                except:
+                    print("exception")
+                    return prev_block
+        return None
     
     def add_block(self, block):
         #TODO: add the block to chain
-        
-        self.chain.append(block);
+        self.chain.append(block)
     
     def check_integrity(self):
         #TODO implement blockchain integrity check
-        
         return 0
 
     """ Function that returns the last block on the chain"""

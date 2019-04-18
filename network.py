@@ -5,9 +5,11 @@ from flask import Flask, request, render_template, jsonify, redirect, send_from_
 from blockchain import Blockchain
 
 UPLOAD_FOLDER = 'uploads'
+TMP_FOLDER = 'tmp'
 
 app =  Flask(__name__)
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+app.config['TMP_FOLDER'] = TMP_FOLDER
 
 # the node's copy of blockchain
 blockchain = Blockchain()
@@ -107,10 +109,25 @@ def upload():
 	if action == "lookup":
 		#TODO search for exact and partial matches
 		print('TODO lookup')
+		file.save(os.path.join(app.config['TMP_FOLDER'], filename))
+		lookup_media = {
+            'genre': request.form['genre'],
+            'media': filename,
+        }
+		result = blockchain.lookup(lookup_media)
+		os.remove(os.path.join(app.config['TMP_FOLDER'], filename)) #remove uploaded file
+
+		if result is None:
+			response = {'unique': True}
+			return jsonify(response), 200
+
+		response = {'unique': False, 'block': result.__dict__, 'message': 'Similar Object Detected'}
+		
+		return jsonify(response), 200
 	elif action == "publish":
 		if os.path.isfile(os.path.join(app.config['UPLOAD_FOLDER'], filename)):
 			print("Duplicate Detected")
-			response = {'ok': False}
+			response = {'unique': False, 'message':'Duplicate Detected'}
 		else:
 			file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
 			#Create a new transaction
@@ -124,11 +141,11 @@ def upload():
 			if result == None:
 				print("FALSE")
 				os.remove(os.path.join(app.config['UPLOAD_FOLDER'], filename)) #remove uploaded file
-				response = {'ok': False}
+				response = {'unique': False, 'message':'Similar Object Detected, Input File Rejected'}
 			else:
 				print("TEST")
 				print(result)
-				response = {'ok': True, 'block': result.__dict__}
+				response = {'unique': True, 'block': result.__dict__}
 
 		return jsonify(response), 200
 
