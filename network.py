@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 import os
 import hashlib
-from flask import Flask, request, render_template, jsonify, redirect
+from flask import Flask, request, render_template, jsonify, redirect, send_from_directory, make_response
 from blockchain import Blockchain
 
 UPLOAD_FOLDER = 'uploads'
@@ -20,22 +20,33 @@ def index():
 def blockchain_page():
     return render_template('./blockchain.html')
 
+@app.route('/uploads/<path:filename>')
+def custom_static(filename):
+    print(filename)
+    temp = filename.split('.')
+    if len(temp) > 1:
+        response = make_response(send_from_directory('./uploads/', temp[0]))
+        response.headers['Content-Type'] = 'text/html'
+        return response
+    else:
+        return make_response(send_from_directory('./uploads/', temp[0]))
 
-@app.route('/new_transaction', methods=['POST'])
-def new_transaction():
-	sender = request.form["sender"]
-	recipient = request.form["recipient"]
-	value = request.form["value"]
 
-	blockchain.new_transaction(sender, recipient, value);
+# @app.route('/new_transaction', methods=['POST'])
+# def new_transaction():
+# 	sender = request.form["sender"]
+# 	recipient = request.form["recipient"]
+# 	value = request.form["value"]
 
-	return redirect('/')
+# 	blockchain.new_transaction(sender, recipient, value)
 
-@app.route('/pending_tx')
-def get_pending_tx():
-	transactions = blockchain.unconfirmed_transactions
-	response = {'transactions': transactions}
-	return jsonify(response), 200
+# 	return redirect('/')
+
+# @app.route('/pending_tx')
+# def get_pending_tx():
+# 	transactions = blockchain.unconfirmed_transactions
+# 	response = {'transactions': transactions}
+# 	return jsonify(response), 200
 
 @app.route('/mine', methods=['GET'])
 def mine_unconfirmed_transactions():
@@ -53,30 +64,30 @@ def get_chain():
 	response = {'chain': chain_data}
 	return jsonify(response), 200
 
-@app.route('/get_block', methods=['POST'])
-def get_block():
-	index = int(request.form["block_index"])
-	block = blockchain.chain[index]
+# @app.route('/get_block', methods=['POST'])
+# def get_block():
+# 	index = int(request.form["block_index"])
+# 	block = blockchain.chain[index]
 
-	response = {'block': block.__dict__}
+# 	response = {'block': block.__dict__}
 
-	return jsonify(response), 200
+# 	return jsonify(response), 200
 
-@app.route('/reset')
-def reset():
-	global blockchain
+# @app.route('/reset')
+# def reset():
+# 	global blockchain
 	
-	blockchain = Blockchain()
+# 	blockchain = Blockchain()
 
-	return redirect('/')
+# 	return redirect('/')
 
-@app.route('/integrity', methods=['GET'])
-def integrityn():
-	integrity = blockchain.check_integrity();
+# @app.route('/integrity', methods=['GET'])
+# def integrityn():
+# 	integrity = blockchain.check_integrity();
 
-	response = {'integrity': integrity}
+# 	response = {'integrity': integrity}
 
-	return jsonify(response), 200
+# 	return jsonify(response), 200
 
 @app.route('/upload', methods=['POST'])
 def upload():
