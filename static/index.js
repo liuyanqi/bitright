@@ -239,6 +239,8 @@ function uploadFile(action) {
 }
 
 function showPublishInfo() {
+    $('#mainContainer').addClass("inactive");
+    $('#mainContainer').removeClass("active");
     $('#publishinfo').show();
     $('#btnPub').hide();
     $('#btnConfirmPub').show();
