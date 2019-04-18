@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 import os
 import hashlib
 from flask import Flask, request, render_template, jsonify, redirect
@@ -88,6 +89,7 @@ def upload():
 	file = request.files['contentFile']
 	
 	filename = hashlib.sha256(file.read()).hexdigest()
+	file.seek(0) #reset read pointer
 
 	action = request.form['action']
 
@@ -95,23 +97,27 @@ def upload():
 		#TODO search for exact and partial matches
 		print('TODO lookup')
 	elif action == "publish":
-		file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-		
-		#Create a new transaction
-		author = request.form['author']
-		title = request.form['title']
-		pubkey = request.form['pubkey']
-		genre = request.form['genre']
-		original_filename = file.filename
-		blockchain.new_transaction(title, original_filename, author, pubkey, genre, filename)
-		result = blockchain.mine()
-		if result == None:
-			print("FALSE")
+		if os.path.isfile(os.path.join(app.config['UPLOAD_FOLDER'], filename)):
+			print("Duplicate Detected")
 			response = {'ok': False}
 		else:
-			print("TEST")
-			print(result)
-			response = {'ok': True, 'block': result.__dict__}
+			file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+			#Create a new transaction
+			author = request.form['author']
+			title = request.form['title']
+			pubkey = request.form['pubkey']
+			genre = request.form['genre']
+			original_filename = file.filename
+			blockchain.new_transaction(title, original_filename, author, pubkey, genre, filename)
+			result = blockchain.mine()
+			if result == None:
+				print("FALSE")
+				os.remove(os.path.join(app.config['UPLOAD_FOLDER'], filename)) #remove uploaded file
+				response = {'ok': False}
+			else:
+				print("TEST")
+				print(result)
+				response = {'ok': True, 'block': result.__dict__}
 
 		return jsonify(response), 200
 

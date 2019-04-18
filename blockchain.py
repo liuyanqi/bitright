@@ -131,18 +131,18 @@ class Blockchain:
         for prev_block in self.chain:
            if block.transaction['genre'] == prev_block.transaction['genre']:
                 if block.transaction['genre'] == 'Audio':
-                    print("helooooooo")
-                    # TODO: NEED TO ADD A FILEPATH
-                    score = ac.calc_accuracy('./acoustic/'+block.transaction['filename'], './acoustic/'+prev_block.transaction['filename']) 
+                    score = ac.calc_accuracy('./uploads/' + block.transaction['media'], './uploads/' + prev_block.transaction['media'])
                     print(score)
                     if score > 0.9:
                       return 0
                 if block.transaction['genre'] == 'Text':
-                    score = tc.check_text_similarity('./text_compare/' + block.transaction['filename'], './text_compare/'+prev_block.transaction['filename']) 
+                    score = tc.check_text_similarity('./uploads/' + block.transaction['media'], './uploads/'+prev_block.transaction['media'])
+                    print(score)
                     if score < 100:
                         return 0;
                 if block.transaction['genre'] == "Image":
-                    score = ic.calc_accuracy('./image_compare/' + block.transaction['filename'], './image_compare/' + prev_block.transaction['filename'])
+                    score = ic.calc_accuracy('./uploads/' + block.transaction['media'], './uploads/' + prev_block.transaction['media'])
+                    print(score)
                     if score < 0.4:
                         return 0;
         return 1
