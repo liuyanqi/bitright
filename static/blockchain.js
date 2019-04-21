@@ -15,7 +15,7 @@ $(document).ready(function () {
                     chain[i].transaction.author,
                     chain[i].transaction.genre, 
                     chain[i].previous_hash, 
-                    chain[i].time_string, 
+                    chain[i].timestamp, 
                     chain[i].transaction.public_key,
                     chain[i].transaction.media,
                     chain[i].transaction.filename);
@@ -44,7 +44,7 @@ function addRow(index, title, author, genre, previousHash, timestamp, pubkey, me
     newRow.insertCell(2).appendChild(document.createTextNode(author));
     newRow.insertCell(3).appendChild(document.createTextNode(genre));
     newRow.insertCell(4).appendChild(document.createTextNode(previousHash));
-    newRow.insertCell(5).appendChild(document.createTextNode(timestamp));
+    newRow.insertCell(5).appendChild(document.createTextNode(new Date(timestamp)));
 
     var pubkeyBlob = new Blob([pubkey], { type: 'text/plain' });
 
@@ -67,7 +67,7 @@ function showDetails(id){
         "<b>" + "Author: " + "</b>" + currentBlock.transaction.author + "<br/>" +
         "<b>" + "Genre: " + "</b>" + currentBlock.transaction.genre + "<br/>" +
         "<span style='word-wrap: break-word;'><b>Previous Hash: " + "</b>"+ currentBlock.previous_hash + "</span><br/>" +
-        "<b>" + "Timestamp: " + "</b>" + currentBlock.timestamp + "<br/>" +
+        "<b>" + "Timestamp: " + "</b>" + new Date(currentBlock.timestamp) + "<br/>" +
         "<b>" + "Owner Public Key: " + "</b>" + '<a href="' + window.URL.createObjectURL(pubkeyBlob) + '" download="pubkey-'+ currentBlock.transaction.media +'.asc" title="Owner Public Key"><i class="fas fa-key"></i></a>' + "<br/>" +
         "<b>" + "Original Filename: " + "</b>" + currentBlock.transaction.filename + "<br/>" +
         "<b>" + "Original File: " + "</b>" + '<a href="' + window.URL.createObjectURL(pubkeyBlob) + '" download="'+ currentBlock.transaction.filename +'" title="Original File"><i class="fas fa-file-download"></i></a>' + "<br/>"
