@@ -26,9 +26,17 @@
     <div class="container d-flex flex-column">
         <div class="row">
             <div class="col">
-                <img src="../static/blockchain.png" class="img-fluid mb-2" style="width: 40%;" alt="Responsive image">
+                <img src="../static/blockchain.png" class="img-fluid mb-4" style="width: 40%;" alt="Responsive image">
             </div>
-
+        </div>
+        <div class="row">
+            <div class="col">
+                <h4>Filters:
+                    <a href="#" onclick="handleFilter(event, 'text')"><i id="btnTextFilter"  class="far fa-file-word ml-2 mr-2 "></i></a>
+                    <a href="#" onclick="handleFilter(event, 'image')"><i id="btnImageFilter" class="far fa-images mr-2 "></i></a>
+                    <a href="#" onclick="handleFilter(event, 'audio')"><i id="btnAudioFilter" class="far fa-file-audio"></i></a>
+                </h4> 
+            </div>
         </div>
         <div class="row w-100">
             <div class="col">
