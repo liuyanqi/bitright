@@ -83,7 +83,7 @@ function showDetails(id) {
         "<b>" + "Timestamp: " + "</b>" + new Date(currentBlock.timestamp) + "<br/>" +
         "<b>" + "Owner Public Key: " + "</b>" + '<a href="' + window.URL.createObjectURL(pubkeyBlob) + '" download="pubkey-' + currentBlock.transaction.media + '.asc" title="Owner Public Key"><i class="fas fa-key"></i></a>' + "<br/>" +
         "<b>" + "Original Filename: " + "</b>" + currentBlock.transaction.filename + "<br/>" +
-        "<b>" + "Original File: " + "</b>" + '<a href="' + window.URL.createObjectURL(pubkeyBlob) + '" download="' + currentBlock.transaction.filename + '" title="Original File"><i class="fas fa-file-download"></i></a>' + "<br/>"
+        "<b>" + "Original File: " + "</b>" + '<a href="/uploads/' + currentBlock.transaction.media + '" download="' + currentBlock.transaction.filename + '" title="Original File"><i class="fas fa-file-download"></i></a>' + "<br/>"
     );
 
     let preview = "";

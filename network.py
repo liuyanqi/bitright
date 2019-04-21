@@ -31,7 +31,7 @@ def custom_static(filename):
         response.headers['Content-Type'] = 'text/html'
         return response
     else:
-        return make_response(send_from_directory('./uploads/', temp[0]))
+        return send_from_directory('./uploads/', temp[0])
 
 
 # @app.route('/new_transaction', methods=['POST'])
