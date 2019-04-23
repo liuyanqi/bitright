@@ -1,5 +1,8 @@
 from time import time
 import datetime
+import os
+import flask
+import json
 import hashlib as hasher
 import acoustic.acoustid_check as ac
 import text_compare.test_text as tc
@@ -49,24 +52,21 @@ class Block:
         self.timestamp = time()
         self.previous_hash = previous_hash
         self.transaction = transaction
-        #self.time_string = self.timestamp_to_string()
-        self.time_string = "dasdas"
     
     def compute_hash(self):
         #TODO Implement hashing
         concat_str = str(self.index) + str(self.timestamp) + str(self.previous_hash) + str(self.transaction['author']) + str(self.transaction['genre'])
         hash_result = hasher.sha256(concat_str.encode('utf-8')).hexdigest()
         return hash_result
-    
-    """ Function to convert a timestamp to a string"""
-    def timestamp_to_string(self):
-        return datetime.datetime.fromtimestamp(self.timestamp).strftime('%H:%M')
-    
-    def __str__(self):
-        toString =  str(self.index) + "\t" + str(self.timestamp) +"\t\t" + str(self.previous_hash) + "\n"
-        #for tx in self.data:
-        #    toString +=  "\t" + str(tx) + "\n"
-        return toString
+
+    def serialize(self):
+        return {
+            'index': self.index,
+            'timestamp': self.timestamp,
+            'previous_hash': self.previous_hash,
+            'transaction': self.transaction
+        }
+
 
 """ Blockchain class. The blockchain is the network of blocks containing all the
     transaction data of the system.
@@ -92,6 +92,8 @@ class Blockchain:
         }
         new_block = Block(index=0, transaction=empty_media, previous_hash=0)
         self.add_block(new_block)
+        # initialize blockchian json folder
+
         return new_block
     
     def new_transaction(self, title, filename, author, public_key, genre, media):
@@ -177,6 +179,12 @@ class Blockchain:
     def add_block(self, block):
         #TODO: add the block to chain
         self.chain.append(block)
+        if not os.path.exists('./blockchain'):
+            os.mkdir('blockchain')
+        with open('./blockchain/chain.json', 'w') as outfile:
+            bc=[b.serialize() for b in self.chain];
+            json.dump(bc, outfile)
+
     
     def check_integrity(self):
         #TODO implement blockchain integrity check
