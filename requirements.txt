@@ -17,7 +17,6 @@ requests==2.21.0
 scikit-image==0.12.3
 scipy==1.2.1
 six==1.12.0
-tlsh==0.2.0
 toolz==0.9.0
 urllib3==1.24.2
 Werkzeug==0.15.2
