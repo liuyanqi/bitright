@@ -20,9 +20,7 @@ class Transaction:
         self.public_key = public_key
         self.genre = genre
         self.media = media
-        #f = open(media, "rb")
-        #content = f.readlines()
-        #self.hash_media = hasher.sha256(content).hexdigest()
+
     
     """ Converts the transaction to a dictionary """
     def toDict(self):
@@ -33,7 +31,6 @@ class Transaction:
             'public_key': self.public_key,
             'genre': self.genre,
             'media': self.media,
-            #"hash_media" : self.hash_media
     }
 
     def __str__(self):
@@ -45,7 +42,6 @@ class Transaction:
     """
 class Block:
     def __init__(self, index, transaction, previous_hash):
-        #TODO: Block initializer
         
         self.index = index
         self.timestamp = time()
@@ -53,7 +49,6 @@ class Block:
         self.transaction = transaction
     
     def compute_hash(self):
-        #TODO Implement hashing
         concat_str = str(self.index) + str(self.timestamp) + str(self.previous_hash) + str(self.transaction['author']) + str(self.transaction['genre'])
         hash_result = hasher.sha256(concat_str.encode('utf-8')).hexdigest()
         return hash_result
@@ -72,14 +67,12 @@ class Block:
     """
 class Blockchain:
     def __init__(self):
-        #TODO: implement Blockchain class initializer
         
         
         self.unconfirmed_transactions = {}
         self.chain = []
     
     def create_genesis_block(self):
-        #TODO: implement creating a new genesis block
         empty_media = {
             'title': "",
             'filename': "",
@@ -87,22 +80,19 @@ class Blockchain:
             'public_key': "",
             'genre': "",
             'media': "",
-            #"hash_media" : ""
         }
         new_block = Block(index=0, transaction=empty_media, previous_hash=0)
         self.add_block(new_block)
-        # initialize blockchian json folder
 
         return new_block
     
     def new_transaction(self, title, filename, author, public_key, genre, media):
-        #TODO: implement adding new transactions
         new_trans = Transaction(title, filename, author, public_key, genre, media).toDict();
         self.unconfirmed_transactions= new_trans.copy()
         return new_trans
     
     def mine(self):
-        #TODO: create a block, verify its originality and add to the blockchain
+        #create a block, verify its originality and add to the blockchain
         if (len(self.chain) ==0):
             block_idx = 1
             previous_hash = 0
@@ -117,7 +107,7 @@ class Blockchain:
             return None
     
     def verify_block(self, block):
-        #TODO: verify song originality and previous hash
+        #verify song originality and previous hash
         #check previous hash
 
         if len(self.chain) ==0:
@@ -126,7 +116,6 @@ class Blockchain:
             previous_hash = self.chain[-1].compute_hash()
         if block.previous_hash != previous_hash:
             return 0
-        print("helllloooooo2")
         #check originality
         for prev_block in self.chain:
            if block.transaction['genre'] == prev_block.transaction['genre']:
@@ -176,18 +165,13 @@ class Blockchain:
         return None
     
     def add_block(self, block):
-        #TODO: add the block to chain
         self.chain.append(block)
-        
-        # with open('./blockchain/chain.json', 'w') as outfile:
-        #     bc=[b.serialize() for b in self.chain]
-        #     json.dump(bc, outfile)
+
         with open('./blockchain/chain.pkl', 'wb') as output:
             pickle.dump(self.chain, output, pickle.HIGHEST_PROTOCOL)
 
     
     def check_integrity(self):
-        #TODO implement blockchain integrity check
         return 0
 
     """ Function that returns the last block on the chain"""
