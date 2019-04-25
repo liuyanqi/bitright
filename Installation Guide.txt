@@ -1,14 +1,6 @@
-1. mkdir BitRight && cd BitRight
-2. pip install virtualenv
-3. virtualenv env
-4. cd env
-5. git clone https://github.com/liuyanqi/bitright.git
-6. source bin/activate
-7. cd bitright
-8. pip install -r requirements.txt
-9. wget https://bitright.sfo2.digitaloceanspaces.com/tlsh.zip
-10. unzip tlsh.zip
-11. cd tlsh/py_ext
-12. python setup.py install
-13. cd ../..
-14. python network.py
+1st Run: Run the following command in the terminal (without double quotes)
+"source ./install.sh"
+"python network.py"
+
+Subsequent Runs: Run the following command in the terminal (without double quotes)
+"source ./run.sh"
