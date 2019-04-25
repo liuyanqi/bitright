@@ -1,8 +1,7 @@
 from time import time
 import datetime
 import os
-import flask
-import json
+import pickle
 import hashlib as hasher
 import acoustic.acoustid_check as ac
 import text_compare.test_text as tc
@@ -179,11 +178,12 @@ class Blockchain:
     def add_block(self, block):
         #TODO: add the block to chain
         self.chain.append(block)
-        if not os.path.exists('./blockchain'):
-            os.mkdir('blockchain')
-        with open('./blockchain/chain.json', 'w') as outfile:
-            bc=[b.serialize() for b in self.chain];
-            json.dump(bc, outfile)
+        
+        # with open('./blockchain/chain.json', 'w') as outfile:
+        #     bc=[b.serialize() for b in self.chain]
+        #     json.dump(bc, outfile)
+        with open('./blockchain/chain.pkl', 'wb') as output:
+            pickle.dump(self.chain, output, pickle.HIGHEST_PROTOCOL)
 
     
     def check_integrity(self):

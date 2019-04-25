@@ -3,6 +3,7 @@ import os
 import hashlib
 from flask import Flask, request, render_template, jsonify, redirect, send_from_directory, make_response
 from blockchain import Blockchain
+import pickle
 
 UPLOAD_FOLDER = 'uploads'
 TMP_FOLDER = 'tmp'
@@ -12,7 +13,19 @@ app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 app.config['TMP_FOLDER'] = TMP_FOLDER
 
 # the node's copy of blockchain
+
 blockchain = Blockchain()
+
+if os.path.exists('./blockchain/chain.pkl'):
+	with open('./blockchain/chain.pkl', 'rb') as input:
+		blockchain.chain = pickle.load(input)
+
+if not os.path.exists('./blockchain'):
+	os.mkdir('blockchain')
+if not os.path.exists('./uploads'):
+	os.mkdir('uploads')
+if not os.path.exists('./tmp'):
+	os.mkdir('tmp')
 
 @app.route('/')
 def index():
