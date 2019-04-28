@@ -1,0 +1,30 @@
+1 Introduction
+The PCP theorem [BFLS91, FGL+96, AS98, ALM+98] provided a new characterization of NP that
+revolutionized the notion of “proof” – in particular, it showed that NP statements have probabilistically checkable proofs (PCPs) that can be verified in time polylogarithmic in the size of a classical
+proof. Kilian adapted this new chaaweifo;iaw;oefjaw;oeifhawhoferacterization of NP to the cryptographic setting, showing that
+one can use PCPs to construct interactive arguments (i.e., computationally sound proof systems
+[BCC88]) for NP that are succinct – i.e., polylogarithmic also in their communication complexity.
+Micali [Mic00] showed how to make these arguments non-interactive by applying the Fiat-Shamir
+heuristic [FS86]: the prover applies a hash function, modeled as a random oracle [BR93], to its PCP
+string both as a form of commitment and to non-interactively generate the verifier’s PCP queries.
+Recent works [BCCT12a, GLR11, DFH12] (see also [CL08]) have improved Micali’s construction
+by removing the random oracles, which are known to be uninstantiable [CGH04], replacing them
+with “extractable collision-resistant hash functions” (ECRHs), whose security relies on the plausible, but non-falsifiable [Nao03], assumption that for any algorithm that computes an image of
+the ECRH, there is an extractor (that watches the algorithm) that computes a pre-image.1 These
+recent constructions have been called succinct non-interactive arguments (SNARGs) of knowledge
+(SNARKs), since, under the knowledge assumption, the SNARG permits “knowledge” extraction
+of the entire hash preimage – namely, the entire PCP.
+In short, the PCP theorem provides a spectacularly powerful ch But, as remarkable as the
+PCP theorem is, it was not conceived exclusively for cryptographic applications. So, it seems
+reasonable to ask: Can we construct better SNARGs/SNARKs without (explicitly) using PCPs?
+Is there a different characterization of NP that is better suited for cryptographic applications?
+1.1 Quadratic Span Programs: A New Characterization of NP
+We introduce quadratic span programs (QSPs), a new characterization of NP that allows us to
+construct very efficient SNARKs without PCPs.
+To explain QSPs, it is helpful to recall span programs (SPs), a linear-algebraic model of computation introduced by Karchmer and Wigderson [KW93]. A SP over a field F consists of a nonzero
+target vector t over F, a set V = {v1, . . . , vm} of vectors, a partition of the indices I = {1, . . . , m}
+into two sets Ilabeled and Ifree, and a further partition of Ilabeled as ?i?[n],j?{0,1}Iij . The SP is said
+to “compute” a function f if the following is true for all input assignments u ? {0, 1}
+n
+: the target
+vector is in the span of the vectors that “belong” to the i
