@@ -35,6 +35,14 @@ def index():
 def blockchain_page():
     return render_template('./blockchain.html')
 
+@app.route('/about')
+def about_page():
+    return render_template('./aboutus.html')
+
+@app.route('/faq')
+def faq_page():
+    return render_template('./faq.html')
+
 @app.route('/uploads/<path:filename>')
 def custom_static(filename):
     print(filename)
