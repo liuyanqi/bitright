@@ -228,7 +228,13 @@ function uploadFile(action) {
             formData.set('author', $('#contentAuthor').val());
             formData.set('pubkey', $('#contentOwnerPubKey').val());
         } else {
-            alert("Invalid input detected.");
+            //alert("Invalid input detected.");
+            new Noty({
+                text: "Invalid input detected.",
+                theme: 'metroui',
+                type: 'error',
+                timeout: 3000,
+            }).show();
             return;
         }
     }
@@ -245,16 +251,34 @@ function uploadFile(action) {
             var data = JSON.parse(xhr.responseText);
             if(data.unique){
                 if (action == 'publish'){
-                    alert("Object Successfully Published");
+                    //alert("Object Successfully Published");
+                    new Noty({
+                        text: "Object Successfully Published",
+                        theme: 'metroui',
+                type: 'success',
+                timeout: 3000,
+                    }).show();
                     $('#publishinfo').hide();
                     $('#btnPub').show();
                     $('#btnConfirmPub').hide();    
                 }
                 else {
-                    alert("Object is Unique");                    
+                    //alert("Object is Unique");   
+                    new Noty({
+                        text: "Object is Unique",
+                        theme: 'metroui',
+                type: 'success',
+                timeout: 3000,
+                    }).show();                 
                 }
             } else {
-                alert(data.message);
+                //alert(data.message);
+                new Noty({
+                    text: data.message,
+                    theme: 'metroui',
+                type: 'error',
+                timeout: 3000,
+                }).show(); 
                 if(action == "lookup"){
                     let currentBlock = data.block;
                     var pubkeyBlob = new Blob([currentBlock.transaction.public_key], { type: 'text/plain' });
@@ -298,12 +322,25 @@ function uploadFile(action) {
             $.LoadingOverlay("hide");
                     
         } else if(xhr.readyState === 4 && xhr.status != 200){
-            alert("Upload Failed");
+            //alert("Upload Failed");
+            new Noty({
+                text: "Upload Failed",
+                theme: 'metroui',
+                type: 'error',
+                timeout: 3000,
+
+            }).show(); 
             $.LoadingOverlay("hide");
         }
     };
     xhr.onerror = function () {
-        alert("Upload Failed");
+        //alert("Upload Failed");
+        new Noty({
+            text: "Upload Failed",
+            theme: 'metroui',
+                type: 'error',
+                timeout: 3000,
+        }).show(); 
         $.LoadingOverlay("hide");
     };
     $.LoadingOverlay("show", {
