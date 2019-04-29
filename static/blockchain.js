@@ -110,81 +110,56 @@ function showDetails(id) {
 }
 
 function handleFilter(e, type) {
-    if (!e.target.className.includes("text-muted")) {
-        if (filter != type) {
-            console.log('hi');
-            $("#blockchainBody tr").remove();
-            for (let i = 0; i < chain.length; i++) {
-                switch (chain[i].transaction.genre.toLowerCase()) {
-                    case type:
-                        addRow(chain[i].index,
-                            chain[i].transaction.title,
-                            chain[i].transaction.author,
-                            chain[i].transaction.genre,
-                            chain[i].previous_hash,
-                            chain[i].timestamp,
-                            chain[i].transaction.public_key,
-                            chain[i].transaction.media,
-                            chain[i].transaction.filename);
-                        break;
-                    default:
-                        addEmptyRow();
-                }
-            }
-        } else {
-            //restore
-            $("#blockchainBody tr").remove();
-            for (let i = 0; i < chain.length; i++) {
-                addRow(chain[i].index,
-                    chain[i].transaction.title,
-                    chain[i].transaction.author,
-                    chain[i].transaction.genre,
-                    chain[i].previous_hash,
-                    chain[i].timestamp,
-                    chain[i].transaction.public_key,
-                    chain[i].transaction.media,
-                    chain[i].transaction.filename);
-            }
-        }
-        toggleFilterButton(type);
+
+    if (filter == type) {
+        filter = "";
+    } else {
+        filter = type;
     }
-    
+console.log(filter);
+    toggleFilterButton();
+
+    $("#blockchainBody tr").remove();
+    for (let i = 0; i < chain.length; i++) {
+        if (filter == chain[i].transaction.genre.toLowerCase() || filter == "") {
+            addRow(chain[i].index,
+                chain[i].transaction.title,
+                chain[i].transaction.author,
+                chain[i].transaction.genre,
+                chain[i].previous_hash,
+                chain[i].timestamp,
+                chain[i].transaction.public_key,
+                chain[i].transaction.media,
+                chain[i].transaction.filename);
+        }
+        else {
+            addEmptyRow();
+        }
+
+    }
+
+
 }
 
-function toggleFilterButton(type) {
-    switch (type) {
+
+
+function toggleFilterButton() {
+    $("#btnTextFilter").removeClass("text-muted");
+    $("#btnAudioFilter").removeClass("text-muted");
+    $("#btnImageFilter").removeClass("text-muted");
+    switch (filter) {
         case 'text':
-            if (filter == type) {
-                $("#btnImageFilter").removeClass("text-muted");
-                $("#btnAudioFilter").removeClass("text-muted");
-                filter = "";
-            } else {
-                $("#btnImageFilter").addClass("text-muted");
-                $("#btnAudioFilter").addClass("text-muted");
-                filter = type;
-            }
+            $("#btnImageFilter").addClass("text-muted");
+            $("#btnAudioFilter").addClass("text-muted");
             break;
         case 'image':
-            if (filter == type) {
-                $("#btnTextFilter").removeClass("text-muted");
-                $("#btnAudioFilter").removeClass("text-muted");
-                filter = "";
-            } else {
-                $("#btnTextFilter").addClass("text-muted");
-                $("#btnAudioFilter").addClass("text-muted");
-                filter = type;
-            }
+
+            $("#btnTextFilter").addClass("text-muted");
+            $("#btnAudioFilter").addClass("text-muted");
             break;
         case 'audio':
-            if (filter == type) {
-                $("#btnImageFilter").removeClass("text-muted");
-                $("#btnTextFilter").removeClass("text-muted");
-                filter = "";
-            } else {
-                $("#btnImageFilter").addClass("text-muted");
-                $("#btnTextFilter").addClass("text-muted");
-                filter = type;
-            }
+            $("#btnImageFilter").addClass("text-muted");
+            $("#btnTextFilter").addClass("text-muted");
             break;
     }
 }
