@@ -3,17 +3,17 @@
 BitRights is a proof of concept project for blockchain based digital copyright protection. Users can upload media files that they create and permanently claim ownership of their work. Anyone on the web can view the published works and verify that the author is correct. Further, it is not possible to upload a work that is too similar to one that has already been published. Audio, image, and text files are currently supported.
 
 # Installing
-**1st Run: Run the following commands from inside the project directory** 
+**1st Run: Run the following commands from inside the project directory. The installation is going to take a few minutes to install all related packages in the virtual environment** 
 ```
 source ./install.sh
-```
-```
 python network.py
 ```
 **Subsequent Runs:**
 ```
 source ./run.sh
 ```
+**We provides some example media files in media/ folder for you to test it out**
+
 # How it Works
 Whenever a user uploads a file, a new block is added to the blockchain. This block contains the title and author of the work, a path/link to download the file, a hash of the file, the public key of the author, the timestamp, and the hash of the previous block. A hash of the file is used instead of the raw data to keep block sizes smaller. The public key of the author is included so that knowledge of the corresponding secret key allows the author to prove ownership. Like any blockchain, the hash of the previous block allows users to verify that the chain has not been tampered with.
 
